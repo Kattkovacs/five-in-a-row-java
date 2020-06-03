@@ -1,6 +1,7 @@
 package com.codecool.fiveinarow;
 
 //import javax.xml.bind.SchemaOutputResolver;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -32,10 +33,11 @@ public class Game implements GameInterface {
         String input = getInput();
         String[] inputArr = input.split("", 2);
 
-        while (!inputValidation(inputArr)){
+        while (!inputValidation(inputArr)) {
             input = getInput();
             inputArr = input.split("", 2);
-        };
+        }
+        ;
 
         String rowHeaders = getRowHeaders();
         String[] colHeaders = getColHeaders();
@@ -46,9 +48,9 @@ public class Game implements GameInterface {
     }
 
     public String getRowHeaders() {
-        String rowHeaders ="";
+        String rowHeaders = "";
         char c = 'A';
-        for (int i=0; i< this.board.length; i++) {
+        for (int i = 0; i < this.board.length; i++) {
             rowHeaders += c;
             c++;
         }
@@ -69,29 +71,29 @@ public class Game implements GameInterface {
         return null;
     }
 
-    public static String getInput(){
+    public static String getInput() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter a coordinate:");
         String coordinate = scan.next();
         return coordinate;
     }
 
-    public boolean inputValidation(String[] inputArr){
+    public boolean inputValidation(String[] inputArr) {
         String rowHeaders = getRowHeaders();
         String[] colHeaders = getColHeaders();
         try {
             int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
             int colIndex = Integer.parseInt(inputArr[1]) - 1;
             int[] coordinates = {rowIndex, colIndex};
-            if(!rowHeaders.contains(inputArr[0].toUpperCase())){
+            if (!rowHeaders.contains(inputArr[0].toUpperCase())) {
                 System.out.println(inputArr[0] + " is an invalid row coordinate!");
                 return false;
             }
-            if(!Arrays.asList(colHeaders).contains(inputArr[1])){
+            if (!Arrays.asList(colHeaders).contains(inputArr[1])) {
                 System.out.println(inputArr[1] + " is an invalid col coordinate!");
                 return false;
             }
-            if(this.board[rowIndex][colIndex] != 0){
+            if (this.board[rowIndex][colIndex] != 0) {
                 System.out.println("This coordinate is already used!");
                 return false;
             }
@@ -108,7 +110,24 @@ public class Game implements GameInterface {
         this.board[row][col] = player;
     }
 
+    public static boolean hasWonArray(int[] array, int player, int howMany) {
+        int counter = 0;
+        for (int value : array) {
+            if (value == player) {
+                counter++;
+                if (counter == howMany) {
+                    return true;
+                }
+            } else {
+                counter = 0;
+            }
+        }
+        return false;
+    }
+
+
     public boolean hasWon(int player, int howMany) {
+        hasWonArray(this.board[0], player, howMany);
         return false;
     }
 
@@ -125,7 +144,7 @@ public class Game implements GameInterface {
 
         /** Print header for columns */
         System.out.printf(stringFormat, blank);
-        for (int colId=1; colId <= nCols; colId++) {
+        for (int colId = 1; colId <= nCols; colId++) {
             System.out.printf(numberFormat, colId);
         }
         System.out.println();
@@ -134,7 +153,7 @@ public class Game implements GameInterface {
         char rowId = 'A';
         for (int[] row : this.board) {
             System.out.printf(stringFormat, rowId);
-            for (int num: row) {
+            for (int num : row) {
                 char sign;
                 switch (num) {
                     case 1:
@@ -143,7 +162,8 @@ public class Game implements GameInterface {
                     case 2:
                         sign = 'O';
                         break;
-                    default: sign = '.';
+                    default:
+                        sign = '.';
                 }
                 System.out.printf(stringFormat, sign);
             }
@@ -161,7 +181,7 @@ public class Game implements GameInterface {
     public void play(int howMany) {
         int player = 1;
         int round = 1;
-        while (round<=3) {
+        while (round <= 3) {
             printBoard();
             int[] coordinates = getMove(player);
             int row = coordinates[0];
