@@ -100,6 +100,7 @@ public class Game implements GameInterface {
     }
 
     public void mark(int player, int row, int col) {
+        this.board[row][col] = player;
     }
 
     public boolean hasWon(int player, int howMany) {
@@ -153,7 +154,16 @@ public class Game implements GameInterface {
     }
 
     public void play(int howMany) {
-        printBoard();
-        getMove(1);
+        int player = 1;
+        int round = 1;
+        while (round<=3) {
+            printBoard();
+            int[] coordinates = getMove(player);
+            int row = coordinates[0];
+            int col = coordinates[1];
+            mark(player, row, col);
+            player = player == 1 ? 2 : 1;
+            round++;
+        }
     }
 }
