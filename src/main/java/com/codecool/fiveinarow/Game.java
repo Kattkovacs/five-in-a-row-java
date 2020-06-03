@@ -79,24 +79,29 @@ public class Game implements GameInterface {
     public boolean inputValidation(String[] inputArr){
         String rowHeaders = getRowHeaders();
         String[] colHeaders = getColHeaders();
-        int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
-        int colIndex = Integer.parseInt(inputArr[1]) - 1;
-        int[] coordinates = {rowIndex, colIndex};
+        try {
+            int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
+            int colIndex = Integer.parseInt(inputArr[1]) - 1;
+            int[] coordinates = {rowIndex, colIndex};
+            if(!rowHeaders.contains(inputArr[0].toUpperCase())){
+                System.out.println(inputArr[0] + " is an invalid row coordinate!");
+                return false;
+            }
+            if(!Arrays.asList(colHeaders).contains(inputArr[1])){
+                System.out.println(inputArr[1] + " is an invalid col coordinate!");
+                return false;
+            }
+            if(this.board[rowIndex][colIndex] != 0){
+                System.out.println("This coordinate is already used!");
+                return false;
+            }
 
-        if(!rowHeaders.contains(inputArr[0].toUpperCase())){
-            System.out.println(inputArr[0] + " is an invalid row coordinate!");
-            return false;
-        }
-        if(!Arrays.asList(colHeaders).contains(inputArr[1])){
+            return true;
+        } catch (NumberFormatException e) {
+            //System.err.println(e.getMessage());
             System.out.println(inputArr[1] + " is an invalid col coordinate!");
             return false;
         }
-        if(this.board[rowIndex][colIndex] != 0){
-            System.out.println("This coordinate is already used!");
-            return false;
-        }
-
-        return true;
     }
 
     public void mark(int player, int row, int col) {
