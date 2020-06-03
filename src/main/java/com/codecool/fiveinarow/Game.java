@@ -46,6 +46,39 @@ public class Game implements GameInterface {
     }
 
     public void printBoard() {
+        int nCols = this.board[0].length;
+        int aligner = 4;
+        String stringFormat = "%" + aligner + "s";
+        String numberFormat = "%" + aligner + "d";
+        String blank = " ";
+
+        /** Print header for columns */
+        System.out.printf(stringFormat, blank);
+        for (int colId=1; colId <= nCols; colId++) {
+            System.out.printf(numberFormat, colId);
+        }
+        System.out.println();
+
+        /** Print row id and row content for each row */
+        char rowId = 'A';
+        for (int[] row : this.board) {
+            System.out.printf(stringFormat, rowId);
+            for (int num: row) {
+                char sign;
+                switch (num) {
+                    case 1:
+                        sign = 'X';
+                        break;
+                    case 2:
+                        sign = 'O';
+                        break;
+                    default: sign = '.';
+                }
+                System.out.printf(stringFormat, sign);
+            }
+            System.out.println();
+            rowId++;
+        }
     }
 
     public void printResult(int player) {
@@ -55,5 +88,6 @@ public class Game implements GameInterface {
     }
 
     public void play(int howMany) {
+        printBoard();
     }
 }
