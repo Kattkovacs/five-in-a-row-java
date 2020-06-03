@@ -1,5 +1,6 @@
 package com.codecool.fiveinarow;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -30,8 +31,18 @@ public class Game implements GameInterface {
 
     public int[] getMove(int player) {
         String input = getInput();
-        System.out.println(input);
-        return null;
+        String[] inputArr = input.split("");
+        inputValidation(inputArr);
+        String rowHeaders = "";
+        for (char c = 'A'; c < this.board[0].length; c++) {
+            rowHeaders = new StringBuilder().append(c).toString();
+        }
+        System.out.println(rowHeaders);
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int rowIndex = alphabet.indexOf(inputArr[0]);
+        int colIndex = Integer.parseInt(inputArr[1]) - 1;
+        int[] coordinates = {rowIndex, colIndex};
+        return coordinates;
     }
 
     public int[] getAiMove(int player) {
@@ -44,6 +55,10 @@ public class Game implements GameInterface {
         System.out.println("Enter a coordinate:");
         String coordinate = scan.next();
         return coordinate;
+    }
+
+    public static boolean inputValidation(String[] inputArr){
+        return true;
     }
 
     public void mark(int player, int row, int col) {
