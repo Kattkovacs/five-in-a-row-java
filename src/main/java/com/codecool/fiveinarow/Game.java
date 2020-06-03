@@ -1,10 +1,21 @@
 package com.codecool.fiveinarow;
 
+import java.util.Arrays;
+
 public class Game implements GameInterface {
 
     private int[][] board;
 
     public Game(int nRows, int nCols) {
+        int[][] newBoard = new int[nRows][nCols];
+
+        /** Print the rows of the board - ONLY FOR TEST PURPOSES! */
+        for (int[] row : newBoard) {
+            System.out.println(Arrays.toString(row));
+        }
+        System.out.println("------ End of test section ------");
+
+        setBoard(newBoard);
     }
 
     public int[][] getBoard() {
