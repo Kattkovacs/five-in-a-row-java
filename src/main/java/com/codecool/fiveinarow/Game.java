@@ -33,18 +33,23 @@ public class Game implements GameInterface {
         String input = getInput();
         String[] inputArr = input.split("");
         inputValidation(inputArr);
-        String rowHeaders ="";
-        char c = 'A';
-        for (int i=0; i< this.board[0].length; i++) {
-            rowHeaders += c;
-            c++;
-        }
+        String rowHeaders = getRowHeaders();
         System.out.println("rowHeaders:" +rowHeaders);
         int rowIndex = rowHeaders.indexOf(inputArr[0]);
         int colIndex = Integer.parseInt(inputArr[1]) - 1;
         int[] coordinates = {rowIndex, colIndex};
         System.out.println(Arrays.toString(coordinates));
         return coordinates;
+    }
+
+    public String getRowHeaders() {
+        String rowHeaders ="";
+        char c = 'A';
+        for (int i=0; i< this.board[0].length; i++) {
+            rowHeaders += c;
+            c++;
+        }
+        return rowHeaders;
     }
 
     public int[] getAiMove(int player) {
