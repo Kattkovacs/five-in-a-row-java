@@ -1,6 +1,6 @@
 package com.codecool.fiveinarow;
 
-import javax.xml.bind.SchemaOutputResolver;
+//import javax.xml.bind.SchemaOutputResolver;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -33,15 +33,17 @@ public class Game implements GameInterface {
         String input = getInput();
         String[] inputArr = input.split("");
         inputValidation(inputArr);
-        String rowHeaders = "";
-        for (char c = 'A'; c < this.board[0].length; c++) {
-            rowHeaders = new StringBuilder().append(c).toString();
+        String rowHeaders ="";
+        char c = 'A';
+        for (int i=0; i< this.board[0].length; i++) {
+            rowHeaders += c;
+            c++;
         }
-        System.out.println(rowHeaders);
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        int rowIndex = alphabet.indexOf(inputArr[0]);
+        System.out.println("rowHeaders:" +rowHeaders);
+        int rowIndex = rowHeaders.indexOf(inputArr[0]);
         int colIndex = Integer.parseInt(inputArr[1]) - 1;
         int[] coordinates = {rowIndex, colIndex};
+        System.out.println(Arrays.toString(coordinates));
         return coordinates;
     }
 
