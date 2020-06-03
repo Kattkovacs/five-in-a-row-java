@@ -110,6 +110,29 @@ public class Game implements GameInterface {
         this.board[row][col] = player;
     }
 
+    public static int[][] getArray(int[][] board) {
+        int nDiagonals = board.length + board[0].length -1;
+        int[][] diagonalsArray = new int[nDiagonals][];
+
+//        int[] diagonalArray = new int[];
+
+        for (int i = 0; i < board.length ; i++) {
+
+            for (int j = 0; j < board[0].length; j++) {
+
+                int index = 0;
+                for (int k = 0; k < nDiagonals; k++) {
+                    diagonalsArray[k][index] = board[i][j];
+                    index++;
+                }
+            }
+        }
+
+//        [[0], [0,0], [0,0,0,], [0,0], [0]]
+//        int[] diagonalArray = new int[];
+        return diagonalsArray;
+    }
+
     public static boolean hasWonArray(int[] array, int player, int howMany) {
         int counter = 0;
         for (int value : array) {
