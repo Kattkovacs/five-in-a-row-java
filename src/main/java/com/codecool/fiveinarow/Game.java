@@ -1,6 +1,8 @@
 package com.codecool.fiveinarow;
 
+//import javax.xml.bind.SchemaOutputResolver;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Game implements GameInterface {
 
@@ -27,11 +29,74 @@ public class Game implements GameInterface {
     }
 
     public int[] getMove(int player) {
-        return null;
+        String input = getInput();
+        String[] inputArr = input.split("", 2);
+
+        while (!inputValidation(inputArr)){
+            input = getInput();
+            inputArr = input.split("", 2);
+        };
+
+        String rowHeaders = getRowHeaders();
+        String[] colHeaders = getColHeaders();
+        int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
+        int colIndex = Integer.parseInt(inputArr[1]) - 1;
+        int[] coordinates = {rowIndex, colIndex};
+        return coordinates;
+    }
+
+    public String getRowHeaders() {
+        String rowHeaders ="";
+        char c = 'A';
+        for (int i=0; i< this.board.length; i++) {
+            rowHeaders += c;
+            c++;
+        }
+        return rowHeaders;
+    }
+
+    public String[] getColHeaders() {
+        String[] colHeaders = new String[this.board[0].length];
+        int id = 1;
+        for (int i = 0; i < this.board[0].length; i++) {
+            colHeaders[i] = Integer.toString(id);
+            id++;
+        }
+        return colHeaders;
     }
 
     public int[] getAiMove(int player) {
         return null;
+    }
+
+    public static String getInput(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter a coordinate:");
+        String coordinate = scan.next();
+        return coordinate;
+    }
+
+    public boolean inputValidation(String[] inputArr){
+        String rowHeaders = getRowHeaders();
+        String[] colHeaders = getColHeaders();
+        int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
+        int colIndex = Integer.parseInt(inputArr[1]) - 1;
+        int[] coordinates = {rowIndex, colIndex};
+
+        if(!rowHeaders.contains(inputArr[0].toUpperCase())){
+            System.out.println(inputArr[0] + " is an invalid row coordinate!");
+            return false;
+        }
+        if(!Arrays.asList(colHeaders).contains(inputArr[1])){
+            System.out.println(inputArr[1] + " is an invalid col coordinate!");
+            return false;
+        }
+        if(this.board[rowIndex][colIndex] != 0){
+            System.out.println("This coordinate is already used!");
+            return false;
+        }
+
+        return true;
     }
 
     public void mark(int player, int row, int col) {
@@ -89,5 +154,6 @@ public class Game implements GameInterface {
 
     public void play(int howMany) {
         printBoard();
+        getMove(1);
     }
 }
