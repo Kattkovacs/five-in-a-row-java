@@ -65,7 +65,7 @@ public class Game implements GameInterface {
 
     public static String getInput() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter a coordinate:");
+        System.out.println("\n"+"Enter a coordinate (e.g.: A1):");
         String coordinate = scan.next();
         return coordinate;
     }
@@ -78,22 +78,30 @@ public class Game implements GameInterface {
             int colIndex = Integer.parseInt(inputArr[1]) - 1;
             int[] coordinates = {rowIndex, colIndex};
             if (!rowHeaders.contains(inputArr[0].toUpperCase())) {
-                System.out.println(inputArr[0] + " is an invalid row coordinate!");
+                refreshScreen();
+                printBoard();
+                System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
                 return false;
             }
             if (!Arrays.asList(colHeaders).contains(inputArr[1])) {
-                System.out.println(inputArr[1] + " is an invalid col coordinate!");
+                refreshScreen();
+                printBoard();
+                System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
                 return false;
             }
             if (this.board[rowIndex][colIndex] != 0) {
-                System.out.println("This coordinate is already used!");
+                refreshScreen();
+                printBoard();
+                System.out.println("\n" + "Coordinate '" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + "' is already used!");
                 return false;
             }
 
             return true;
         } catch (NumberFormatException e) {
             //System.err.println(e.getMessage());
-            System.out.println(inputArr[1] + " is an invalid col coordinate!");
+            refreshScreen();
+            printBoard();
+            System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
             return false;
         }
     }
@@ -233,7 +241,13 @@ public class Game implements GameInterface {
     public void enableAi(int player) {
     }
 
+    public static void refreshScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
     public void play(int howMany) {
+        refreshScreen();
         int player = 1;
         int round = 1;
         while (round <= 20) {
@@ -241,9 +255,12 @@ public class Game implements GameInterface {
             int[] coordinates = getMove(player);
             int row = coordinates[0];
             int col = coordinates[1];
+            refreshScreen();
             mark(player, row, col);
             int[][] arraysForCheckWon = getArraysForCheckWon(coordinates);
             if (hasWon(arraysForCheckWon, player, howMany)){
+                refreshScreen();
+                printBoard();
                 printResult(player);
             }
             player = player == 1 ? 2 : 1;
