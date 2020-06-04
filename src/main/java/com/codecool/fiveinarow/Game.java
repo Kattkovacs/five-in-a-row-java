@@ -2,6 +2,7 @@ package com.codecool.fiveinarow;
 
 //import javax.xml.bind.SchemaOutputResolver;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -11,13 +12,6 @@ public class Game implements GameInterface {
 
     public Game(int nRows, int nCols) {
         int[][] newBoard = new int[nRows][nCols];
-
-        /** Print the rows of the board - ONLY FOR TEST PURPOSES! */
-        for (int[] row : newBoard) {
-            System.out.println(Arrays.toString(row));
-        }
-        System.out.println("------ End of test section ------");
-
         setBoard(newBoard);
     }
 
@@ -37,8 +31,6 @@ public class Game implements GameInterface {
             input = getInput();
             inputArr = input.split("", 2);
         }
-        ;
-
         String rowHeaders = getRowHeaders();
         String[] colHeaders = getColHeaders();
         int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
@@ -112,10 +104,6 @@ public class Game implements GameInterface {
 
     public int[] getTargetRow(int[] coordinates) {
         int [] targetRow = board[coordinates[0]];
-        /** FOR TEST PURPOSES */
-        System.out.println("coordinates: "+Arrays.toString(coordinates));
-        System.out.println("targetRow: " + Arrays.toString(targetRow));
-        System.out.println("----- end of test section -----");
         return targetRow;
     }
 
@@ -127,10 +115,6 @@ public class Game implements GameInterface {
         for (int i=0; i<targetCol.length; i++) {
             targetCol[i] = board[i][targetColIndex];
         }
-        /** FOR TEST PURPOSES */
-        System.out.println("coordinates: "+Arrays.toString(coordinates));
-        System.out.println("targetCol: " + Arrays.toString(targetCol));
-        System.out.println("----- end of test section -----");
         return targetCol;
     }
 
@@ -147,22 +131,7 @@ public class Game implements GameInterface {
 
         for (int i=0; i<rightDownDiagonal.length; i++) {
             rightDownDiagonal[i] = this.board[starterRow+i][starterCol+i];
-
-            /** ONLY FOR TEST PURPOSES */
-            if (i==0){
-                System.out.println("coordinates: "+Arrays.toString(coordinates));
-            }
-            int boardRow = starterRow+i;
-            int boardCol = starterCol+i;
-            System.out.println("rightDownDiagonal["+i+"]: board["+boardRow+"]["+boardCol+"]");
-            if (i==rightDownDiagonal.length-1){
-                System.out.println("----- end of test section -----");
-            }
         }
-        /** ONLY FOR TEST PURPOSES */
-        System.out.println("rightDownDiagonal: "+Arrays.toString(rightDownDiagonal));
-        System.out.println("******************************");
-        System.out.println("----- end of test section -----");
         return rightDownDiagonal;
     }
 
@@ -179,21 +148,7 @@ public class Game implements GameInterface {
 
         for (int i=0; i<leftDownDiagonal.length; i++) {
             leftDownDiagonal[i] = this.board[starterRow+i][starterCol-i];
-
-            /** ONLY FOR TEST PURPOSES */
-            if (i==0){
-                System.out.println("coordinates: "+Arrays.toString(coordinates));
-            }
-            int boardRow = starterRow+i;
-            int boardCol = starterCol-i;
-            System.out.println("leftDownDiagonal["+i+"]: board["+boardRow+"]["+boardCol+"]");
-            if (i==leftDownDiagonal.length-1){
-                System.out.println("----- end of test section -----");
-            }
         }
-        /** ONLY FOR TEST PURPOSES */
-        System.out.println("leftDownDiagonal: "+Arrays.toString(leftDownDiagonal));
-        System.out.println("----- end of test section -----");
         return leftDownDiagonal;
     }
 
@@ -207,24 +162,20 @@ public class Game implements GameInterface {
         return arraysForCheckWon;
     }
 
-    public static boolean hasWonArray(int[] array, int player, int howMany) {
-        int counter = 0;
-        for (int value : array) {
-            if (value == player) {
-                counter++;
-                if (counter == howMany) {
-                    return true;
+    public boolean hasWon(int[][] array, int player, int howMany) {
+        for (int[] innerArr : array) {
+            int counter = 0;
+            for (int value : innerArr) {
+                if (value == player) {
+                    counter++;
+                    if (counter == howMany) {
+                        return true;
+                    }
+                } else {
+                    counter = 0;
                 }
-            } else {
-                counter = 0;
             }
         }
-        return false;
-    }
-
-
-    public boolean hasWon(int player, int howMany) {
-        hasWonArray(this.board[0], player, howMany);
         return false;
     }
 
@@ -270,6 +221,13 @@ public class Game implements GameInterface {
     }
 
     public void printResult(int player) {
+        if (player == 1) {
+            System.out.println("X won!");
+        } else if (player == 2){
+            System.out.println("O won!");
+        } else {
+            System.out.println("It's a tie!");
+        }
     }
 
     public void enableAi(int player) {
@@ -278,16 +236,15 @@ public class Game implements GameInterface {
     public void play(int howMany) {
         int player = 1;
         int round = 1;
-        while (round <= 3) {
+        while (round <= 20) {
             printBoard();
             int[] coordinates = getMove(player);
             int row = coordinates[0];
             int col = coordinates[1];
             mark(player, row, col);
-            int[][] arraysForCheckWon= getArraysForCheckWon(coordinates);
-            /**ONLY FOR TEST PURPOSES*/
-            for (int i=0; i<arraysForCheckWon.length;i++){
-                System.out.println("arraysForCheckWon: "+Arrays.toString(arraysForCheckWon[i]));
+            int[][] arraysForCheckWon = getArraysForCheckWon(coordinates);
+            if (hasWon(arraysForCheckWon, player, howMany)){
+                printResult(player);
             }
             player = player == 1 ? 2 : 1;
             round++;
