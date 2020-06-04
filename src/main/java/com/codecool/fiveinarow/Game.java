@@ -243,11 +243,11 @@ public class Game implements GameInterface {
 
     public void printResult(int player) {
         if (player == 1) {
-            System.out.println("X won!");
+            System.out.println("\n" + "X won!");
         } else if (player == 2){
-            System.out.println("O won!");
+            System.out.println("\n" + "O won!");
         } else {
-            System.out.println("It's a tie!");
+            System.out.println("\n" + "It's a tie!");
         }
     }
 
@@ -275,9 +275,11 @@ public class Game implements GameInterface {
                 refreshScreen();
                 printBoard();
                 printResult(player);
+                quitGame();
             }
             if (isFull()){
                 printResult(3);
+                quitGame();
             }
             player = player == 1 ? 2 : 1;
             round++;
@@ -285,7 +287,7 @@ public class Game implements GameInterface {
     }
 
     public void quitGame(){
-            System.out.println("Bye!");
+            System.out.println("\n" + "Bye!" + "\n");
             System.exit(0);
     }
 
