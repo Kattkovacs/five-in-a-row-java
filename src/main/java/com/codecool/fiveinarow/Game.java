@@ -5,6 +5,7 @@ package com.codecool.fiveinarow;
 import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.lang.*;
 
 public class Game implements GameInterface {
 
@@ -25,18 +26,23 @@ public class Game implements GameInterface {
 
     public int[] getMove(int player) {
         String input = getInput();
-        String[] inputArr = input.split("", 2);
+        if (input.equals("quit") || input.equals("q")) {
+            quitGame();
+            return null;
+        } else {
+            String[] inputArr = input.split("", 2);
 
-        while (!inputValidation(inputArr)) {
-            input = getInput();
-            inputArr = input.split("", 2);
+            while (!inputValidation(inputArr)) {
+                input = getInput();
+                inputArr = input.split("", 2);
+            }
+            String rowHeaders = getRowHeaders();
+            String[] colHeaders = getColHeaders();
+            int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
+            int colIndex = Integer.parseInt(inputArr[1]) - 1;
+            int[] coordinates = {rowIndex, colIndex};
+            return coordinates;
         }
-        String rowHeaders = getRowHeaders();
-        String[] colHeaders = getColHeaders();
-        int rowIndex = rowHeaders.indexOf(inputArr[0].toUpperCase());
-        int colIndex = Integer.parseInt(inputArr[1]) - 1;
-        int[] coordinates = {rowIndex, colIndex};
-        return coordinates;
     }
 
     public String getRowHeaders() {
@@ -250,4 +256,10 @@ public class Game implements GameInterface {
             round++;
         }
     }
+
+    public void quitGame(){
+            System.out.println("Bye!");
+            System.exit(0);
+    }
+
 }
