@@ -110,27 +110,101 @@ public class Game implements GameInterface {
         this.board[row][col] = player;
     }
 
-    public static int[][] getArray(int[][] board) {
-        int nDiagonals = board.length + board[0].length -1;
-        int[][] diagonalsArray = new int[nDiagonals][];
+    public int[] getTargetRow(int[] coordinates) {
+        int [] targetRow = board[coordinates[0]];
+        /** FOR TEST PURPOSES */
+        System.out.println("coordinates: "+Arrays.toString(coordinates));
+        System.out.println("targetRow: " + Arrays.toString(targetRow));
+        System.out.println("----- end of test section -----");
+        return targetRow;
+    }
 
-//        int[] diagonalArray = new int[];
+    public int[] getTargetCol(int[] coordinates) {
+        int targetColIndex = coordinates[1];
+        int arraySize = board.length;
+        int [] targetCol = new int[arraySize];
 
-        for (int i = 0; i < board.length ; i++) {
+        for (int i=0; i<targetCol.length; i++) {
+            targetCol[i] = board[i][targetColIndex];
+        }
+        /** FOR TEST PURPOSES */
+        System.out.println("coordinates: "+Arrays.toString(coordinates));
+        System.out.println("targetCol: " + Arrays.toString(targetCol));
+        System.out.println("----- end of test section -----");
+        return targetCol;
+    }
 
-            for (int j = 0; j < board[0].length; j++) {
+    public int[] getRightDownDiagonal(int[] coordinates){
+        int lastRowIndex = this.board.length -1;
+        int lastColIndex = this.board[0].length -1;
+        int targetRow = coordinates[0];
+        int targetCol = coordinates[1];
+        int offset = Math.min(targetRow, targetCol);
+        int starterRow = targetRow - offset;
+        int starterCol = targetCol - offset;
+        int arraySize = Math.min(lastRowIndex-starterRow, lastColIndex-starterCol) + 1;
+        int[] rightDownDiagonal = new int[arraySize];
 
-                int index = 0;
-                for (int k = 0; k < nDiagonals; k++) {
-                    diagonalsArray[k][index] = board[i][j];
-                    index++;
-                }
+        for (int i=0; i<rightDownDiagonal.length; i++) {
+            rightDownDiagonal[i] = this.board[starterRow+i][starterCol+i];
+
+            /** ONLY FOR TEST PURPOSES */
+            if (i==0){
+                System.out.println("coordinates: "+Arrays.toString(coordinates));
+            }
+            int boardRow = starterRow+i;
+            int boardCol = starterCol+i;
+            System.out.println("rightDownDiagonal["+i+"]: board["+boardRow+"]["+boardCol+"]");
+            if (i==rightDownDiagonal.length-1){
+                System.out.println("----- end of test section -----");
             }
         }
+        /** ONLY FOR TEST PURPOSES */
+        System.out.println("rightDownDiagonal: "+Arrays.toString(rightDownDiagonal));
+        System.out.println("******************************");
+        System.out.println("----- end of test section -----");
+        return rightDownDiagonal;
+    }
 
-//        [[0], [0,0], [0,0,0,], [0,0], [0]]
-//        int[] diagonalArray = new int[];
-        return diagonalsArray;
+    public int[] getLeftDownDiagonal(int[] coordinates){
+        int lastRowIndex = this.board.length -1;
+        int lastColIndex = this.board[0].length -1;
+        int targetRow = coordinates[0];
+        int targetCol = coordinates[1];
+        int offset = Math.min(targetRow, lastColIndex-targetCol);
+        int starterRow = targetRow - offset;
+        int starterCol = targetCol + offset;
+        int arraySize = Math.min(lastRowIndex-starterRow, starterCol) + 1;
+        int[] leftDownDiagonal = new int[arraySize];
+
+        for (int i=0; i<leftDownDiagonal.length; i++) {
+            leftDownDiagonal[i] = this.board[starterRow+i][starterCol-i];
+
+            /** ONLY FOR TEST PURPOSES */
+            if (i==0){
+                System.out.println("coordinates: "+Arrays.toString(coordinates));
+            }
+            int boardRow = starterRow+i;
+            int boardCol = starterCol-i;
+            System.out.println("leftDownDiagonal["+i+"]: board["+boardRow+"]["+boardCol+"]");
+            if (i==leftDownDiagonal.length-1){
+                System.out.println("----- end of test section -----");
+            }
+        }
+        /** ONLY FOR TEST PURPOSES */
+        System.out.println("leftDownDiagonal: "+Arrays.toString(leftDownDiagonal));
+        System.out.println("----- end of test section -----");
+        return leftDownDiagonal;
+    }
+
+    public int[][] getArraysForCheckWon(int[] coordinates) {
+        int[][] arraysForCheckWon = new int[4][];
+        arraysForCheckWon[0] = getTargetRow(coordinates);
+        arraysForCheckWon[1] = getTargetCol(coordinates);
+        arraysForCheckWon[2] = getRightDownDiagonal(coordinates);
+        arraysForCheckWon[3] = getLeftDownDiagonal(coordinates);
+
+        return arraysForCheckWon;
     }
 
     public static boolean hasWonArray(int[] array, int player, int howMany) {
@@ -210,6 +284,11 @@ public class Game implements GameInterface {
             int row = coordinates[0];
             int col = coordinates[1];
             mark(player, row, col);
+            int[][] arraysForCheckWon= getArraysForCheckWon(coordinates);
+            /**ONLY FOR TEST PURPOSES*/
+            for (int i=0; i<arraysForCheckWon.length;i++){
+                System.out.println("arraysForCheckWon: "+Arrays.toString(arraysForCheckWon[i]));
+            }
             player = player == 1 ? 2 : 1;
             round++;
         }
