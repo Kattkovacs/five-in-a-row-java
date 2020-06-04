@@ -262,8 +262,7 @@ public class Game implements GameInterface {
     public void play(int howMany) {
         refreshScreen();
         int player = 1;
-        int round = 1;
-        while (round <= 20) {
+        while (true) {
             printBoard();
             int[] coordinates = getMove(player);
             int row = coordinates[0];
