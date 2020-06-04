@@ -186,7 +186,14 @@ public class Game implements GameInterface {
     }
 
     public boolean isFull() {
-        return false;
+        for (int[] row : this.board) {
+            for (int num : row) {
+                if (num == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void printBoard() {
@@ -251,6 +258,9 @@ public class Game implements GameInterface {
             int[][] arraysForCheckWon = getArraysForCheckWon(coordinates);
             if (hasWon(arraysForCheckWon, player, howMany)){
                 printResult(player);
+            }
+            if (isFull()){
+                printResult(3);
             }
             player = player == 1 ? 2 : 1;
             round++;
