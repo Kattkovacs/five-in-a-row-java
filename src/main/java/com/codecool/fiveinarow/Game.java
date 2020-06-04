@@ -20,19 +20,25 @@ public class Game implements GameInterface {
         return board;
     }
 
+    public static final String RESET = "\033[0m";  // Text Reset
+    public static final String RED_BRIGHT = "\033[0;91m";    // RED
+    public static final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
+    public static final String YELLOW_BRIGHT = "\033[0;93m"; // YELLOW
+    public static final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE
+
     public void setBoard(int[][] board) {
         this.board = board;
     }
 
     public int[] getMove(int player) {
         String input = getInput();
-        if (input.equals("quit") || input.equals("q")) {
+        if (input.toLowerCase().equals("quit") || input.toLowerCase().equals("q")) {
             quitGame();
             return null;
         } else {
             String[] inputArr = input.split("", 2);
 
-            while (!inputValidation(inputArr)) {
+            while (!inputValidation(inputArr, player)) {
                 input = getInput();
                 inputArr = input.split("", 2);
             }
@@ -69,14 +75,22 @@ public class Game implements GameInterface {
         return null;
     }
 
+    public void displayWhoTurns(int player) {
+        if (player == 1) {
+            System.out.println("\n" + RED_BOLD_BRIGHT + "'X' turns!" + RESET);
+        } else {
+            System.out.println("\n" + BLUE_BOLD_BRIGHT + "'O' turns!" + RESET);
+        }
+    }
+
     public static String getInput() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("\n"+"Enter a coordinate (e.g.: A1):");
+        System.out.println("\n"+ YELLOW_BRIGHT + "Enter a coordinate (e.g.: A1):" + RESET);
         String coordinate = scan.next();
         return coordinate;
     }
 
-    public boolean inputValidation(String[] inputArr) {
+    public boolean inputValidation(String[] inputArr, int player) {
         String rowHeaders = getRowHeaders();
         String[] colHeaders = getColHeaders();
         try {
@@ -86,19 +100,22 @@ public class Game implements GameInterface {
             if (!rowHeaders.contains(inputArr[0].toUpperCase())) {
                 refreshScreen();
                 printBoard();
-                System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
+                displayWhoTurns(player);
+                System.out.println("\n" + RED_BRIGHT + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!" + RESET);
                 return false;
             }
             if (!Arrays.asList(colHeaders).contains(inputArr[1])) {
                 refreshScreen();
                 printBoard();
-                System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
+                displayWhoTurns(player);
+                System.out.println("\n" + RED_BRIGHT+ inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!" + RESET);
                 return false;
             }
             if (this.board[rowIndex][colIndex] != 0) {
                 refreshScreen();
                 printBoard();
-                System.out.println("\n" + "Coordinate '" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + "' is already used!");
+                displayWhoTurns(player);
+                System.out.println("\n" + RED_BRIGHT + "Coordinate '" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + "' is already used!" + RESET);
                 return false;
             }
 
@@ -107,7 +124,8 @@ public class Game implements GameInterface {
             //System.err.println(e.getMessage());
             refreshScreen();
             printBoard();
-            System.out.println("\n" + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!");
+            displayWhoTurns(player);
+            System.out.println("\n" + RED_BRIGHT + inputArr[0].toUpperCase() + inputArr[1].toUpperCase() + " is an invalid coordinate!" + RESET);
             return false;
         }
     }
@@ -223,16 +241,16 @@ public class Game implements GameInterface {
         for (int[] row : this.board) {
             System.out.printf(stringFormat, rowId);
             for (int num : row) {
-                char sign;
+                String sign;
                 switch (num) {
                     case 1:
-                        sign = 'X';
+                        sign = RED_BOLD_BRIGHT + "   X" + RESET;
                         break;
                     case 2:
-                        sign = 'O';
+                        sign = BLUE_BOLD_BRIGHT + "   O" + RESET;
                         break;
                     default:
-                        sign = '.';
+                        sign = ".";
                 }
                 System.out.printf(stringFormat, sign);
             }
@@ -243,11 +261,11 @@ public class Game implements GameInterface {
 
     public void printResult(int player) {
         if (player == 1) {
-            System.out.println("\n" + "X won!");
+            System.out.println("\n" + RED_BOLD_BRIGHT + "X won!" + RESET);
         } else if (player == 2){
-            System.out.println("\n" + "O won!");
+            System.out.println("\n" + BLUE_BOLD_BRIGHT + "O won!" + RESET);
         } else {
-            System.out.println("\n" + "It's a tie!");
+            System.out.println("\n" + YELLOW_BRIGHT + "It's a tie!" + RESET);
         }
     }
 
@@ -264,6 +282,7 @@ public class Game implements GameInterface {
         int player = 1;
         while (true) {
             printBoard();
+            displayWhoTurns(player);
             int[] coordinates = getMove(player);
             int row = coordinates[0];
             int col = coordinates[1];
@@ -277,16 +296,17 @@ public class Game implements GameInterface {
                 quitGame();
             }
             if (isFull()){
+                refreshScreen();
+                printBoard();
                 printResult(3);
                 quitGame();
             }
             player = player == 1 ? 2 : 1;
-            round++;
         }
     }
 
     public void quitGame(){
-            System.out.println("\n" + "Bye!" + "\n");
+            System.out.println("\n" + YELLOW_BRIGHT + "Thanks for playing! Bye!" + RESET + "\n");
             System.exit(0);
     }
 
