@@ -10,7 +10,7 @@ public interface GameInterface {
     int[] getMove(int player);
     int[] getAiMove(int player);
     void mark(int player, int row, int col);
-    boolean hasWon(int player, int howMany);
+    boolean hasWon(int[][] array, int player, int howMany);
     boolean isFull();
     void printBoard();
     void printResult(int player);
